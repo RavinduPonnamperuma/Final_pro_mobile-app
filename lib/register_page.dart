@@ -1,12 +1,34 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 
 class RegisterPage extends StatelessWidget {
+
+
+
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
   RegisterPage({super.key});
+  Future<void> registerUser(Map<String, dynamic> user) async {
+    Dio dio = Dio();
+    try {
+      Response response = await dio.post(
+        'http://192.168.8.146:3000/user',
+        data: user,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
+      // You can handle the response here
+      print('Response: ${response.data}');
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

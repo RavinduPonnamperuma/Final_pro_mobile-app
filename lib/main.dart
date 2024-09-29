@@ -3,7 +3,7 @@ import 'login_page.dart'; // Import the login page
 // import 'register_page.dart'; // Import the register page
 
 void main() {
-  runApp(MyApp());
+   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
