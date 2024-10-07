@@ -65,6 +65,7 @@ class RegisterPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16.0),
+            
             TextField(
               controller: passwordController,
               obscureText: true,
