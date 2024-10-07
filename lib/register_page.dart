@@ -7,15 +7,15 @@ class RegisterPage extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
-  final TextEditingController roleController = TextEditingController();
-
 
   RegisterPage({super.key});
-  Future<void> registerUser(Map<String, dynamic> user) async {
+
+  Future<void> registerUser(BuildContext context, Map<String, dynamic> user) async {
     Dio dio = Dio();
     try {
       Response response = await dio.post(
-        'http://192.168.8.146:3000/user',
+        //ip eka chnage krgnna
+        'http://192.168.8.103:3000/user',
         data: user,
         options: Options(
           headers: {
@@ -23,10 +23,32 @@ class RegisterPage extends StatelessWidget {
           },
         ),
       );
-      // You can handle the response here
-      print('Response: ${response.data}');
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('User Saved Successfully'),
+            duration: Duration(seconds: 6),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('User Saved Failed'),
+            duration: Duration(seconds: 6),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     } catch (e) {
-      print('Error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('User Saved Failed'),
+          duration: Duration(seconds: 6),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
@@ -36,7 +58,8 @@ class RegisterPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Register'),
       ),
-      body: Padding(
+
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(10.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -65,7 +88,6 @@ class RegisterPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16.0),
-            
             TextField(
               controller: passwordController,
               obscureText: true,
@@ -75,7 +97,7 @@ class RegisterPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16.0),
-             TextField(
+            TextField(
               controller: addressController,
               decoration: const InputDecoration(
                 labelText: 'Address',
@@ -83,26 +105,32 @@ class RegisterPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16.0),
-            TextField(
-              controller: roleController,
-              decoration: const InputDecoration(
-                labelText: 'Role',
-                border: OutlineInputBorder(),
+            Container(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  String fname = fnameController.text;
+                  String lname = lnameController.text;
+                  String email = emailController.text;
+                  String password = passwordController.text;
+                  String address = addressController.text;
+                  registerUser(context, {
+                    'firstName': fname,
+                    'lastName': lname,
+                    'email': email,
+                    'password': password,
+                    'address': address,
+                  });
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  padding: const EdgeInsets.symmetric(vertical: 12.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
+                child: const Text('Register',style: TextStyle(color: Colors.white, fontSize: 16.0),),
               ),
-            ),
-            const SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                // Add your registration logic here
-                String fname = fnameController.text;
-                String lname = lnameController.text;
-                String email = emailController.text;
-                String password = passwordController.text;
-                String address = addressController.text;
-                String role = roleController.text;
-                print('First: $fname,Last: $lname, Email: $email, Password: $password,Adress: $address,Role: $role,');
-              },
-              child: const Text('Register'),
             ),
           ],
         ),

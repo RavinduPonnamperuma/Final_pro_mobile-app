@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'login_page.dart'; // Import the login page
-// import 'register_page.dart'; // Import the register page
+import 'login_page.dart';
+
 
 void main() {
    runApp(const MyApp());
@@ -12,11 +12,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Login and Register',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginPage(), // Set the home to the login page
+      home: LoginPage(),
     );
   }
 }
