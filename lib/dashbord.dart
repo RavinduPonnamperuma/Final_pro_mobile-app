@@ -99,7 +99,7 @@ class DashboardPage extends StatelessWidget {
               ),
             ),
           ),
-          SensorDataSlider(
+          const SensorDataSlider(
               humidity: 45.0, temperature: 22.0, moisture: 30.0),
         ],
       ),
@@ -180,11 +180,11 @@ class SensorDataSlider extends StatefulWidget {
   final double moisture;
 
   const SensorDataSlider({
-    Key? key,
+    super.key,
     required this.humidity,
     required this.temperature,
     required this.moisture,
-  }) : super(key: key);
+  });
 
   @override
   _SensorDataSliderState createState() => _SensorDataSliderState();

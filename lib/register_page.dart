@@ -105,7 +105,7 @@ class RegisterPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16.0),
-            Container(
+            SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
