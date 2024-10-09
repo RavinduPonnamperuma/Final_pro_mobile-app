@@ -15,7 +15,7 @@ class RegisterPage extends StatelessWidget {
     try {
       Response response = await dio.post(
         //ip eka chnage krgnna
-        'http://192.168.8.103:3000/user',
+        'http://192.168.43.75:3000/user',
         data: user,
         options: Options(
           headers: {
