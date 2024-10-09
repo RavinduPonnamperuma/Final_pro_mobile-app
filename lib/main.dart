@@ -3,11 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
-
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import 'dashbord.dart';
+import 'login_page.dart';
+import 'mqtt/MqttDataNotifier.dart';
 
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -21,7 +19,10 @@ void main() {
   flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
   runApp(
-   MyApp(),
+    ChangeNotifierProvider(
+      create: (_) => MqttDataNotifier(),
+      child: MyApp(),
+    ),
 
   );
 }
@@ -38,10 +39,10 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    mqttService = MqttService(navigatorKey);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      mqttService.connect();
-    });
+    mqttService = MqttService(
+      navigatorKey,
+      Provider.of<MqttDataNotifier>(context, listen: false),
+    );
   }
 
   @override
@@ -62,11 +63,12 @@ class MqttService {
   final String password = 'qwerty';
   final GlobalKey<NavigatorState> navigatorKey;
   List<String> notifications = [];
+  final MqttDataNotifier dataNotifier;
 
 
   MqttServerClient? client;
 
-  MqttService(this.navigatorKey) {
+  MqttService(this.navigatorKey, this.dataNotifier) {
     client = MqttServerClient(serverUri, clientId);
     client?.port = port;
     client?.keepAlivePeriod = 20;
@@ -91,10 +93,6 @@ class MqttService {
       if (client?.connectionStatus?.state == MqttConnectionState.connected) {
         print('MQTT client connected');
         client?.subscribe('esp/output1', MqttQos.atMostOnce);
-        client?.subscribe('esp/1/mpu6050', MqttQos.atMostOnce);
-        client?.subscribe('esp/1/adxl345', MqttQos.atMostOnce);
-        client?.subscribe('esp/1/accident', MqttQos.atMostOnce);
-
         client?.updates!.listen((List<MqttReceivedMessage<MqttMessage>> c) {
           final String topic = c[0].topic;
           if (topic == 'esp/output1') {
